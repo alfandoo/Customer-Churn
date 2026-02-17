@@ -1,173 +1,211 @@
-# 📉 Customer Churn Prediction  
-## Machine Learning for Customer Retention
+# 📉 Telco Customer Churn Prediction  
+## End-to-End Machine Learning Project (CRISP-DM)
 
 ---
 
 # 📌 Project Overview
 
-Proyek *Customer Churn Prediction* ini dibangun untuk membantu bisnis dalam memahami dan memprediksi pelanggan yang berpotensi berhenti berlangganan (*churn*). Dengan model ini, tim Customer Success atau Marketing dapat mengambil aksi proaktif untuk menurunkan churn dan mempertahankan pelanggan bernilai tinggi.
+Proyek ini bertujuan untuk memprediksi pelanggan yang berpotensi churn pada industri telekomunikasi menggunakan dataset **Telco Customer Churn (Kaggle)**.
+
+Customer churn merupakan salah satu tantangan utama bisnis subscription karena berdampak langsung terhadap:
+
+- Revenue loss
+- Customer Acquisition Cost (CAC)
+- Customer Lifetime Value (CLV)
+- Market competitiveness
+
+Model ini dirancang sebagai **early warning system** untuk membantu tim bisnis melakukan intervensi sebelum pelanggan benar-benar berhenti berlangganan.
 
 ---
 
 # 🎯 Business Problem
 
-Churn—ketika pelanggan berhenti memakai layanan—dapat merugikan bisnis karena:
+Bagaimana mengidentifikasi pelanggan yang memiliki risiko tinggi churn sehingga perusahaan dapat:
 
-- Berdampak langsung pada revenue
-- Meningkatkan CAC (Customer Acquisition Cost)
-- Mengurangi lifetime value
-- Mendorong kompetisi di pasar
-
-Tujuan utama proyek ini:
-
-1. Memprediksi churn pelanggan secara akurat
-2. Mengidentifikasi faktor churn utama
-3. Memberikan rekomendasi retention berbasis data
+1. Menurunkan churn rate
+2. Meningkatkan customer retention
+3. Mengoptimalkan strategi pricing & kontrak
+4. Meningkatkan lifetime value pelanggan
 
 ---
 
-# 📂 Dataset Overview
+# 📂 Dataset
 
-Dataset berisi data pelanggan dengan atribut seperti:
+- Source: Kaggle – Telco Customer Churn
+- Total records: ~7.000 pelanggan
+- Target: `Churn` (Yes/No)
 
-- Demografi
-- Account & service usage
-- Biaya & pembayaran
-- Gender, tenure, contract type
-- Feature churn status (Yes/No)
+Fitur utama mencakup:
 
-Target: `Churn` (binary).
+- Tenure (lama berlangganan)
+- MonthlyCharges & TotalCharges
+- Contract type
+- Internet service
+- Payment method
+- Tech support & add-on services
+- Demografi (SeniorCitizen, Dependents, dll)
 
-Dataset ini umum ditemukan pada use case *telecom / subscription business*.
+Dataset memiliki class imbalance (churn sekitar 26–27%).
 
 ---
 
 # 🧪 Methodology (CRISP-DM)
 
 ## 1️⃣ Business Understanding
-
-Memahami dampak churn terhadap revenue dan strategi retensi yang dapat dilakukan.
+Mendefinisikan churn sebagai problem klasifikasi biner untuk mendukung strategi retensi.
 
 ## 2️⃣ Data Understanding
-
-Initial EDA mencakup:
-
-- Distribusi target churn vs non-churn
-- Analisis outlier
-- Korelasi antar fitur
-- Identifikasi missing values
+- Distribusi churn vs non-churn
+- Analisis korelasi
+- EDA per fitur numerik & kategorikal
+- Identifikasi imbalance class
 
 ## 3️⃣ Data Preparation
+- One-Hot Encoding untuk fitur kategorikal
+- Scaling untuk fitur numerik
+- Train-test split
+- Pipeline + GridSearchCV
+- Evaluasi menggunakan multiple metrics
 
-Langkah preprocessing:
+## 4️⃣ Modeling
 
-- Encoding kategori (Label/One-Hot)
-- Feature scaling
-- Handling missing values
-- Train/test split
-- Penanganan class imbalance
-
----
-
-# 📊 Modeling
-
-Model yang dievaluasi:
+Model yang diuji:
 
 - Logistic Regression
-- K-Nearest Neighbors (KNN)
 - Random Forest
-- Support Vector Machine (SVM)
-- Gradient Boosting
-
-Evaluation metrics:
-
-- Accuracy
-- F1 Score
-- ROC-AUC
-- Confusion Matrix
+- XGBoost
+- Support Vector Machine (SVC)
+- K-Nearest Neighbors (KNN)
 
 ---
 
-# 📈 Model Performance
+# 📊 Model Performance (Test Set)
 
-| Model | Accuracy | F1 Score | ROC-AUC |
-|--------|----------|----------|---------|
-| Random Forest | 0.802 | 0.684 | 0.782 |
-| Logistic Regression | 0.791 | 0.678 | 0.802 |
-| SVM | 0.794 | 0.687 | 0.768 |
-| Gradient Boosting | 0.815 | 0.702 | 0.805 |
-| KNN | 0.761 | 0.612 | 0.743 |
-
-> *Metrics di atas adalah contoh; harap sesuaikan dengan hasil aktual dari run Anda.*
+| Model | Accuracy | Precision | Recall | F1 | ROC-AUC | AP |
+|--------|----------|-----------|--------|------|---------|------|
+| Logistic Regression | 0.752 | 0.522 | **0.774** | **0.623** | **0.845** | **0.640** |
+| Random Forest | 0.760 | 0.533 | 0.749 | 0.623 | 0.840 | 0.622 |
+| XGBoost | **0.772** | **0.555** | 0.706 | 0.622 | 0.843 | 0.638 |
+| SVC | 0.762 | 0.536 | 0.739 | 0.621 | 0.832 | 0.622 |
+| KNN | 0.713 | 0.475 | 0.803 | 0.597 | 0.810 | 0.533 |
 
 ---
 
-# 🔎 Feature Importance (Random Forest)
+# 🏆 Best Model
 
-Contoh top 10 fitur penting:
+### Logistic Regression (Based on F1 Score)
 
-| Feature | Importance |
-|---------|------------|
-| Tenure | 0.217 |
-| MonthlyCharges | 0.184 |
-| Contract | 0.156 |
-| InternetService | 0.109 |
-| SeniorCitizen | 0.072 |
-| PaymentMethod | 0.055 |
-| TotalCharges | 0.044 |
-| OnlineSecurity | 0.029 |
-| TechSupport | 0.024 |
-| OnlineBackup | 0.020 |
+Walaupun XGBoost memiliki accuracy tertinggi, Logistic Regression dipilih sebagai best model karena:
 
-> *Fitur importance dapat bervariasi tergantung model.*
+- F1 Score tertinggi (0.623)
+- ROC-AUC tertinggi (0.845)
+- Recall tinggi (0.774) → penting untuk menangkap churner
+- Lebih interpretable untuk kebutuhan bisnis
 
-Insight:
-- Lama berlangganan (*Tenure*) adalah indikator churn terkuat.
-- Biaya bulanan dan tipe kontrak berkorelasi kuat dengan churn.
+Best Parameters:
+```
+{'classifier__C': 1, 'classifier__solver': 'lbfgs'}
+```
 
 ---
 
-# 🧠 Key Insights
+# 🔎 Key Feature Importance (Logistic Regression Coefficients)
 
-## 💡 1. Customer Tenure
+| Feature | Effect |
+|----------|--------|
+| tenure | 🔻 Menurunkan churn |
+| TotalCharges | 🔺 Meningkatkan churn |
+| Contract_Two year | 🔻 Sangat menurunkan churn |
+| Contract_Month-to-month | 🔺 Meningkatkan churn |
+| InternetService_DSL | 🔻 |
+| PaymentMethod_Electronic check | 🔺 |
+| TechSupport_Yes | 🔻 |
+| PaperlessBilling_No | 🔻 |
+| InternetService_Fiber optic | 🔺 |
 
-Pelanggan dengan usia kontrak pendek cenderung churn lebih tinggi → kemungkinan kurangnya keterikatan.
+---
 
-## 💡 2. Billing & Payment
+# 📈 Business Insights
 
-Fitur seperti *MonthlyCharges* & *PaymentMethod* menunjukkan pengaruh kuat terhadap churn → impak biaya terhadap retensi.
+## 🔁 1. Tenure is the Strongest Indicator
+Semakin lama pelanggan berlangganan, semakin kecil kemungkinan churn.
 
-## 💡 3. Service Usage
+➡ Fokus retensi pada pelanggan baru (tenure < 12 bulan).
 
-Layanan seperti *InternetService*, *TechSupport*, *OnlineSecurity* memberikan sinyal churn behavior.
+---
+
+## 📜 2. Contract Type Matters
+
+- Month-to-month meningkatkan risiko churn.
+- Two-year contract sangat menurunkan churn.
+
+➡ Insentif untuk kontrak jangka panjang sangat efektif.
+
+---
+
+## 💳 3. Payment Behavior
+
+Electronic check berkorelasi positif dengan churn.
+
+➡ Perlu investigasi friction dalam metode pembayaran ini.
+
+---
+
+## 🛠 4. Support & Add-ons Reduce Churn
+
+TechSupport dan OnlineSecurity berpengaruh menurunkan churn.
+
+➡ Bundling layanan tambahan dapat menjadi strategi retensi.
 
 ---
 
 # 🚀 Business Recommendations
 
-### 💼 Retention Strategy
+## 1️⃣ Early Warning System
+Deploy Logistic Regression model untuk scoring churn secara berkala.
 
-1. **Loyalty Rewards Program**  
-   Tawarkan benefit untuk pelanggan dengan tenure rendah untuk meningkatkan retensi.
+## 2️⃣ Targeted Retention Campaign
+- Fokus pelanggan month-to-month
+- Promo upgrade ke kontrak tahunan
 
-2. **Contract Incentives**  
-   Diskon atau insentif untuk long-term contracts.
+## 3️⃣ Pricing & Bundle Strategy
+- Bundling TechSupport & Security
+- Incentive untuk autopay / credit card payment
 
-3. **Churn Alert System**  
-   Implementasi model sebagai *churn early warning system* yang memicu action tim Customer Success.
-
----
-
-### 🤝 Customer Experience
-
-1. **Feedback Loop**  
-   Survey pelanggan dengan risiko churn tinggi untuk memahami pain points.
-
-2. **Tingkatkan Layanan Dukungan**  
-   Fokus pada fitur support yang menjadi faktor churn (misal: TechSupport, OnlineSecurity).
-
-3. **Optimalisasi Billing Transparency**  
-   Komunikasikan biaya dengan lebih jelas untuk mengurangi churn karena billing issues.
+## 4️⃣ Onboarding Optimization
+Program khusus untuk pelanggan baru 0–6 bulan.
 
 ---
 
+# 🛠 Tech Stack
+
+- Python
+- Pandas & NumPy
+- Scikit-learn
+- XGBoost
+- Matplotlib & Seaborn
+- GridSearchCV Pipeline
+
+---
+
+# 🎯 Conclusion
+
+Logistic Regression memberikan keseimbangan terbaik antara performa dan interpretabilitas.
+
+Faktor utama churn:
+- Tenure rendah
+- Kontrak bulanan
+- Electronic check
+- Tidak menggunakan layanan tambahan
+
+Model ini dapat digunakan sebagai dasar implementasi churn prediction system di industri subscription / telecom.
+
+---
+
+# 📎 Future Work
+
+- Threshold tuning untuk business cost optimization
+- Cost-sensitive learning
+- SHAP interpretability
+- Deployment via Streamlit
+- Customer Lifetime Value integration
